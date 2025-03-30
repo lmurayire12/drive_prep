@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "819304464552",
+    "project_id": "drivepep-45037",
+    "storage_bucket": "drivepep-45037.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819304464552:android:c8238bcd44e7f53bef029d",
+        "android_client_info": {
+          "package_name": "com.example.drive_prep"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFLBFCIJpFN7Qm_0WIyfYVGEy3rSPZy1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
