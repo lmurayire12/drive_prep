@@ -1,4 +1,3 @@
-// lib/screens/admin_screen.dart
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 
@@ -41,7 +40,9 @@ class _AdminScreenState extends State<AdminScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFA500), // Orange background like ProfileScreen
+      backgroundColor: const Color(
+        0xFFFFA500,
+      ), // Orange background like ProfileScreen
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -52,11 +53,7 @@ class _AdminScreenState extends State<AdminScreen> {
                 const CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.person,
-                    size: 50,
-                    color: Colors.grey,
-                  ),
+                  child: Icon(Icons.person, size: 50, color: Colors.grey),
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -125,12 +122,17 @@ class _AdminScreenState extends State<AdminScreen> {
                   onPressed: () {
                     // Placeholder for change password functionality
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Change Password feature coming soon!')),
+                      const SnackBar(
+                        content: Text('Change Password feature coming soon!'),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
-                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 50,
+                      vertical: 15,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -152,7 +154,10 @@ class _AdminScreenState extends State<AdminScreen> {
                       onPressed: _handleSave,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 15,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -170,7 +175,10 @@ class _AdminScreenState extends State<AdminScreen> {
                       onPressed: _handleLogout,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
-                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 15,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

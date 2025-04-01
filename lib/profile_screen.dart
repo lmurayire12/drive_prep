@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'admin_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -16,20 +17,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String email = '';
   String phone = '';
   bool isLoading = true;
+  bool _isAdmin = false;
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+
+    super.initState();
+    _checkIfAdmin();
+  }
+
+  void _checkIfAdmin() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final doc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    if (doc.exists && doc.data() != null) {
+      setState(() {
+        _isAdmin = doc.data()!['isAdmin'] == true;
+      });
+    }
   }
 
   Future<void> _loadUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      final doc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
       if (doc.exists) {
         final data = doc.data();
         setState(() {
@@ -87,10 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'E-Mail: $email',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                      Text('E-Mail: $email', style: TextStyle(fontSize: 16)),
                       const SizedBox(height: 20),
                       Text(
                         'Phone number: $phone',
@@ -103,12 +118,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
-                  // Placeholder for change password functionality
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Change Password feature coming soon!')),
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      final TextEditingController _newPasswordController =
+                          TextEditingController();
+
+                      return AlertDialog(
+                        title: const Text("Change Password"),
+                        content: TextField(
+                          controller: _newPasswordController,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            labelText: "New Password",
+                            hintText: "Enter your new password",
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text("Cancel"),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              final newPassword =
+                                  _newPasswordController.text.trim();
+
+                              if (newPassword.length < 6) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Password must be at least 6 characters',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              try {
+                                await FirebaseAuth.instance.currentUser!
+                                    .updatePassword(newPassword);
+
+                                Navigator.of(context).pop(); // close dialog
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Password updated successfully!',
+                                    ),
+                                  ),
+                                );
+                              } catch (e) {
+                                Navigator.of(context).pop(); // close dialog
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Error: ${e.toString()}'),
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Text("Update"),
+                          ),
+                        ],
+                      );
+                    },
                   );
                 },
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   padding: const EdgeInsets.symmetric(
@@ -128,6 +203,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
+
+              if (_isAdmin)
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AdminScreen(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 50,
+                      vertical: 15,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text(
+                    'Admin Panel',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 20),
+
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
@@ -135,7 +242,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const LoginScreen()),
+                      builder: (context) => const LoginScreen(),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
