@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -9,25 +11,62 @@ class AdminScreen extends StatefulWidget {
 }
 
 class _AdminScreenState extends State<AdminScreen> {
-  final _emailController = TextEditingController(text: 'johndalton@gmail.com');
-  final _phoneController = TextEditingController(text: '+250 728 243 349');
-  final _nationalityController = TextEditingController(text: 'Rwanda');
-  final _genderController = TextEditingController(text: 'Male');
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAdminData();
+  }
+
+  Future<void> _loadAdminData() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final doc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    if (doc.exists && doc.data() != null) {
+      final data = doc.data()!;
+      _nameController.text = data['fullName'] ?? '';
+      _emailController.text = data['email'] ?? '';
+      _phoneController.text = data['phone'] ?? '';
+    }
+
+    setState(() => isLoading = false);
+  }
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
-    _nationalityController.dispose();
-    _genderController.dispose();
     super.dispose();
   }
 
-  void _handleSave() {
-    // Mock save logic - In a real app, this would update a backend
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Profile updated successfully!')),
-    );
+  void _handleSave() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final updatedData = {
+      'fullName': _nameController.text.trim(),
+      'email': _emailController.text.trim(),
+      'phone': _phoneController.text.trim(),
+    };
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update(updatedData);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Update failed: ${e.toString()}')));
+    }
   }
 
   void _handleLogout() {
@@ -40,40 +79,37 @@ class _AdminScreenState extends State<AdminScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(
-        0xFFFFA500,
-      ), // Orange background like ProfileScreen
+      backgroundColor: Colors.white, // Changed to white
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 40),
-                const CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.person, size: 50, color: Colors.grey),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'John Dalton', // Admin name (could be dynamic)
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 40),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+        child:
+            isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: 40),
+                        const CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.grey,
+                          child: Icon(
+                            Icons.person,
+                            size: 50,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            labelText: 'Full Name',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                         TextField(
                           controller: _emailController,
                           decoration: InputDecoration(
@@ -93,112 +129,90 @@ class _AdminScreenState extends State<AdminScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          controller: _nationalityController,
-                          decoration: InputDecoration(
-                            labelText: 'Nationality',
-                            border: OutlineInputBorder(
+                        const SizedBox(height: 40),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Placeholder for change password functionality
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Change Password feature coming soon!',
+                                ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 50,
+                              vertical: 15,
+                            ),
+                            shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text(
+                            'Change password',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                         ),
                         const SizedBox(height: 20),
-                        TextField(
-                          controller: _genderController,
-                          decoration: InputDecoration(
-                            labelText: 'Gender',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: _handleSave,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 50,
+                                  vertical: 15,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text(
+                                'Save',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                          ),
+                            ElevatedButton(
+                              onPressed: _handleLogout,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 50,
+                                  vertical: 15,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text(
+                                'Log out',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: () {
-                    // Placeholder for change password functionality
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Change Password feature coming soon!'),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 50,
-                      vertical: 15,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    'Change password',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: _handleSave,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 50,
-                          vertical: 15,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        'Save',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: _handleLogout,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 50,
-                          vertical: 15,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        'Log out',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

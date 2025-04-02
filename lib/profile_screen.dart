@@ -48,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               .collection('users')
               .doc(user.uid)
               .get();
+
       if (doc.exists) {
         final data = doc.data();
         setState(() {

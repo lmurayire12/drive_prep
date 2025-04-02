@@ -17,10 +17,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _fetchUserName() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      final doc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
       if (doc.exists) {
         setState(() {
           _userName = doc['fullName'] ?? '';
@@ -35,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> courses = [
     'Our courses',
     'Tests and quizzes',
-    'Progress Tracker'
+    'Progress Tracker',
   ];
   List<String> filteredCourses = [];
 
@@ -55,11 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _filterCourses() {
     setState(() {
-      filteredCourses = courses
-          .where((course) => course
-              .toLowerCase()
-              .contains(_searchController.text.toLowerCase()))
-          .toList();
+      filteredCourses =
+          courses
+              .where(
+                (course) => course.toLowerCase().contains(
+                  _searchController.text.toLowerCase(),
+                ),
+              )
+              .toList();
     });
   }
 
@@ -82,11 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const Row(
                   children: [
-                    Icon(
-                      Icons.directions_car,
-                      color: Colors.black,
-                      size: 30,
-                    ),
+                    Icon(Icons.directions_car, color: Colors.black, size: 30),
                     SizedBox(width: 10),
                     Text(
                       'DrivePrep',
@@ -106,16 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const SizedBox(height: 20),
-            Text(
-              'Hi, $_userName',
-              style: TextStyle(fontSize: 18),
-            ),
+            Text('Hi, $_userName', style: TextStyle(fontSize: 18)),
             const Text(
               'Test Your Driving Knowledge And Get Certified',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             TextField(
@@ -139,8 +133,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const Text(
                       'Our courses',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     GestureDetector(
@@ -174,8 +170,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const Text(
                       'Tests and quizzes',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     GestureDetector(
@@ -195,10 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(15),
                           child: Stack(
                             children: [
-                              Image.asset(
-                                'assets/quiz.jpg',
-                                fit: BoxFit.cover,
-                              ),
+                              Image.asset('assets/quiz.jpg', fit: BoxFit.cover),
                               Positioned(
                                 bottom: 10,
                                 left: 10,
@@ -229,8 +224,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const Text(
                       'Progress Tracker',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Card(
@@ -281,30 +278,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5D5),
       body: SafeArea(
-        child: _selectedIndex == 0
-            ? _buildHomeContent()
-            : _selectedIndex == 3
+        child:
+            _selectedIndex == 0
+                ? _buildHomeContent()
+                : _selectedIndex == 3
                 ? const ProfileScreen()
                 : _buildHomeContent(), // Placeholder for other tabs
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.credit_card),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.credit_card), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.orange,
