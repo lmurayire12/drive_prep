@@ -5,7 +5,46 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // signIn method
+  Future<User?> register(
+    String email,
+    String password,
+    String fullName,
+    String phone,
+  ) async {
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      User? user = result.user;
+
+      if (user != null) {
+        // Send verification email
+        await user.sendEmailVerification();
+
+        // Store user details in Firestore
+        await _firestore.collection('users').doc(user.uid).set({
+          'email': email,
+          'fullName': fullName,
+          'phone': phone,
+          'isAdmin': false,
+          'joinedAt': Timestamp.now(),
+          'subscriptionStatus': 'Free',
+          'profilePicture': '',
+          'badges': [],
+          'progress': {'completedLessons': '0', 'quizzesPassed': '0'},
+        });
+
+        return user;
+      }
+    } catch (e) {
+      print("Registration Error: $e");
+      return null;
+    }
+    return null;
+  }
+
   Future<User?> signIn(String email, String password) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
@@ -15,36 +54,6 @@ class AuthService {
       return result.user;
     } catch (e) {
       print("Login Error: $e");
-      return null;
-    }
-  }
-
-  Future<User?> register(
-      String email, String password, String fullName, String phone) async {
-    try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-
-      User? user = result.user;
-
-      // Save full user data clearly matching your Firestore structure
-      await _firestore.collection('users').doc(user!.uid).set({
-        'email': email,
-        'fullName': fullName,
-        'phone': phone,
-        'joinedAt': Timestamp.now(),
-        'subscriptionStatus': 'Free',
-        'profilePicture': '', // empty initially
-        'badges': [],
-        'progress': {
-          'completedLessons': '0',
-          'quizzesPassed': '0',
-        },
-      });
-
-      return user;
-    } catch (e) {
-      print("Registration Error: $e");
       return null;
     }
   }

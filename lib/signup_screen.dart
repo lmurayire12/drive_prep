@@ -36,22 +36,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _phoneController.text.isNotEmpty) {
       if (_passwordController.text == _confirmPasswordController.text) {
         User? user = await AuthService().register(
-            _usernameOrEmailController.text,
-            _passwordController.text,
-            _fullNameController.text,
-            _phoneController.text);
+          _usernameOrEmailController.text,
+          _passwordController.text,
+          _fullNameController.text,
+          _phoneController.text,
+        );
 
         if (!mounted) return;
 
         if (user != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Registration successful! Please check your email to verify your account.',
+              ),
+            ),
+          );
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const LoginScreen()),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Registration failed.')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Registration failed.')));
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

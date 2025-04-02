@@ -23,21 +23,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _loadUserData();
-
-    super.initState();
-    _checkIfAdmin();
-  }
-
-  void _checkIfAdmin() async {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
-    final doc =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-    if (doc.exists && doc.data() != null) {
-      setState(() {
-        _isAdmin = doc.data()!['isAdmin'] == true;
-      });
-    }
   }
 
   Future<void> _loadUserData() async {

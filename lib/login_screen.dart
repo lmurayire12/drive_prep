@@ -26,16 +26,25 @@ class _LoginScreenState extends State<LoginScreen> {
   void _handleLogin() async {
     if (_usernameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
-      User? user = await AuthService()
-          .signIn(_usernameController.text, _passwordController.text);
+      User? user = await AuthService().signIn(
+        _usernameController.text,
+        _passwordController.text,
+      );
 
       if (!mounted) return;
 
       if (user != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+        if (user.emailVerified) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        } else {
+          await FirebaseAuth.instance.signOut();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please verify your email first.')),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid email/password!')),
@@ -58,9 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
             'assets/login_image.jpg', // Updated image path
             fit: BoxFit.cover,
           ),
-          Container(
-            color: Colors.black.withOpacity(0.5),
-          ),
+          Container(color: Colors.black.withOpacity(0.5)),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -69,11 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Row(
                     children: [
-                      Icon(
-                        Icons.directions_car,
-                        color: Colors.white,
-                        size: 30,
-                      ),
+                      Icon(Icons.directions_car, color: Colors.white, size: 30),
                       SizedBox(width: 10),
                       Text(
                         'DrivePrep',
