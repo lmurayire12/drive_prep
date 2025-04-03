@@ -58,7 +58,7 @@ DrivePrep uses **StatefulWidget** and **setState()** for managing UI updates. Th
 
 ## Next Steps
 1. **Enhance UI/UX**: Improve visual design and animations.
-2. **Add More Tests**: Expand the question bank for a more comprehensive learning experience.
+2. **Add More Tests and quizzes**: Expand the question bank for a more comprehensive learning experience.
 3. **Deploy on Play Store**: Publish the app for wider accessibility.
 
 ## Installation
