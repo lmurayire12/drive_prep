@@ -34,7 +34,13 @@ The app integrates Firebase Realtime Database to perform CRUD operations:
 - **Create**: Users can sign up and store test results.
 - **Read**: Fetch practice test questions and user progress.
 - **Update**: Modify user scores and track improvement.
-- **Delete**: Remove outdated test records.
+
+ ## Overview of the Development Process and Tools
+For the development of DrivePrep, a structured approach was adopted to ensure clear progress and efficient collaboration. The project was managed using Miro, a versatile online collaboration platform for managing requirements, tasks, and project milestones. This tool was particularly useful in organizing the project into one-week sprints, making it easier to track progress and address any bottlenecks promptly. Tasks were broken down into smaller components, allowing for a more focused approach to development.
+To clarify the app’s functionality, use-case diagrams and flowcharts were created. These visual aids played an essential role in understanding the user experience and the system’s behavior in various states. They provided insight into the features available to both regular users and administrators, ensuring that no key functionality was overlooked during the build process.
+The core tool used for the mobile development of DrivePrep was the Flutter framework, written in Dart. Flutter is known for its flexibility and fast performance across multiple platforms. To work with Flutter, the Flutter SDK was installed, either through cloning the repository from GitHub or using the official documentation. For debugging, Android Studio was utilized to handle Android device emulation . Alongside, the Android SDK were required to be set as environment variables, ensuring a smooth Flutter development experience.
+Dependencies essential for the project, such as Firebase Authentication and other Google services, were listed in the pubspec.yaml file. This file manages the project's libraries and external packages. Commands like flutter pub get were used to ensure that these packages were properly integrated, facilitating functionalities such as handling user authentication and accessing real-time data.
+
 
 ## State Management
 DrivePrep uses **StatefulWidget** and **setState()** for managing UI updates. This approach is simple and effective for handling dynamic data changes, such as updating test scores and user progress in real time.
