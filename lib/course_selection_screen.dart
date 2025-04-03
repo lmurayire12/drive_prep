@@ -80,7 +80,7 @@ class _CourseSelectionScreenState extends State<CourseSelectionScreen> {
               );
             },
           );
-        },
+        }, //CourseSelectionScreen 
       ),
     );
   }
