@@ -1,7 +1,7 @@
 # DrivePrep App
 
 ## Overview
-DrivePrep is a mobile application designed to help individuals in Rwanda prepare for their driving tests by providing effective courses and tests that will give them an idea. The app provides a comprehensive learning experience through interactive study materials, practice tests, and real-time feedback mechanisms.
+DrivePrep is a mobile application designed to help individuals in Rwanda prepare for their driving tests by providing effective courses and tests that will give them an idea on how the actual exams will be. The app provides a comprehensive learning experience through interactive study materials, practice tests, and real-time feedback mechanisms.
 
 ## Features
 - **User Authentication**: Secure login and registration using Firebase Authentication.
