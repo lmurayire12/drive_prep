@@ -59,4 +59,4 @@ class AuthService {
       return null;
     }
   }
-}
+} //auth_service.dart
