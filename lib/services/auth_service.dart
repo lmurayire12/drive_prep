@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
 
   Future<User?> register(
     String email,
@@ -20,7 +22,7 @@ class AuthService {
       User? user = result.user;
 
       if (user != null) {
-        // Send verification email
+        // Send verification email to the user 
         await user.sendEmailVerification();
 
         // Store user details in Firestore
