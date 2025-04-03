@@ -87,7 +87,7 @@ Role
 Key Contributions
 Taiwo and Chimdalu
 Frontend Developers
-- Set up Flutter project, structured folder layout. - Converted Figma design to Flutter UI. - Integrated Firebase Authentication for login/signup. - Connected UI with backend features (data fetching, profiles). - UI testing and optimization.
+- Set up Flutter project, structured folder layout. - Designed the UI for the app and Converted Figma design to Flutter UI. - Integrated Firebase Authentication for login/signup. - Connected UI with backend features (data fetching, profiles). - UI testing and optimization.
 Chimdalu
 Frontend Developer
 - Assisted in project setup and UI components. - Implemented Google Sign-In and Email/Password Authentication. - Ensured smooth navigation post-authentication. - Conducted UI testing and fixed responsiveness issues.
