@@ -85,8 +85,8 @@ TEAM CONTRIBUTIONS
 Team Member
 Role
 Key Contributions
-Taiwo
-Frontend Developer
+Taiwo and Chimdalu
+Frontend Developers
 - Set up Flutter project, structured folder layout. - Converted Figma design to Flutter UI. - Integrated Firebase Authentication for login/signup. - Connected UI with backend features (data fetching, profiles). - UI testing and optimization.
 Chimdalu
 Frontend Developer
